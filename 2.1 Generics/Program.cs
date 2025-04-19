@@ -29,6 +29,8 @@ storage.DeleteElementByIndex(index);
 Console.WriteLine($"Удалили элемент номер {index + 1}");
 storage.Print();
 
+Console.WriteLine($"Пытаемся получить элемент за границами массива");
+storage.GetElementByIndex(-1);
 
 class Storage<T>
 {
@@ -42,7 +44,7 @@ class Storage<T>
     
     public void DeleteElementByIndex(int index)
     {
-        CheckIndex(index);
+        CheckIndex(ref index);
 
         IEnumerable<T> arr1 = arr.Take(index);
         IEnumerable<T> arr2 = arr.Skip(index + 1);
@@ -51,17 +53,25 @@ class Storage<T>
 
     public T GetElementByIndex(int index)
     {
-        CheckIndex(index);
+        CheckIndex(ref index);
         return arr[index];
     }
     public void SetElementByIndex(int index, T element)
     {
-        CheckIndex(index);
+        CheckIndex(ref index);
         arr[index] = element;
     }
-    private void CheckIndex(int index)
+    private void CheckIndex(ref int index)
     {
-        if (index >= arr.Length || index < 0) throw new Exception($"Индекс должен быть в диапазоне от 0 до {arr.Length - 1}");
+        try
+        {
+            if (index >= arr.Length || index < 0) throw new Exception($"Индекс должен быть в диапазоне от 0 до {arr.Length - 1}");
+        }
+        catch
+        {
+            Console.WriteLine($"Индекс должен быть в диапазоне от 0 до {arr.Length - 1}");
+            index = 0;
+        }
     }
     public int Length() => arr.Length;
 
